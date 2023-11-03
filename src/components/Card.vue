@@ -4,12 +4,12 @@ defineProps<{
   todo: {
     value: string;
     completed: boolean;
-    id: number;
+    id: string;
   };
 }>();
 
 const emit = defineEmits(["deleteTodoList", "updateTodoItem"]);
-const handleDeleteTodoItem = (id: number) => {
+const handleDeleteTodoItem = (id: string) => {
   emit("deleteTodoList", id);
 };
 const handleUpdateTodoItem = (value: string) => {

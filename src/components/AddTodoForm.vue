@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { ref, defineModel } from "vue";
+import { ref } from "vue";
 
 defineProps<{ addTodoList?: any }>();
 // const parentInputValue = defineModel<string>("inputValue");
 const emit = defineEmits(["addTodoList"]);
 const inputValue = ref("");
-
-console.log("parentInputValue", inputValue);
 
 const handleAddTodo = () => {
   // alert(inputValue);
