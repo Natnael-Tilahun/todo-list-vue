@@ -1,45 +1,68 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Card from "./components/Card.vue";
+import { nanoid } from "nanoid";
+import AddTodoForm from "./components/AddTodoForm.vue";
 
-type Todos = string;
+type Todos = {
+  value: string;
+  completed: boolean;
+  id: string;
+};
 
 let inputValue = ref("");
 
-const todos = ref<Todos[]>([]);
+let todos = ref<Todos[]>([]);
 
-const addTodoList = (todoValue: Todos) => {
-  todos.value.push(todoValue);
+let storedTodo = localStorage.getItem("todos");
+
+if (storedTodo) {
+  todos.value = JSON.parse(storedTodo) as Todos[];
+}
+
+const addTodoList = (todoValue: string) => {
+  todos.value.push({ value: todoValue, completed: false, id: nanoid() });
+  localStorage.setItem("todos", JSON.stringify(todos.value));
   inputValue.value = "";
 };
+
+const deleteTodoList = (id: string) => {
+  todos.value = todos.value.filter((todo) => todo.id !== id);
+  localStorage.setItem("todos", JSON.stringify(todos.value));
+};
+
+const updateTodoItem = (todoValue: string) => {
+  // alert(todoValue);
+  // const index = todos.value.findIndex((item) => item.id === id);
+  inputValue.value = todoValue;
+  // todos.value[index].value = todoValue;
+};
+
+const reversedTodoList = computed(() => [...todos.value].reverse());
 </script>
 
 <template>
   <div
-    class="flex w-full h-screen justify-center gap-5 items-center bg-slate-900 text-black"
+    class="flex w-full min-h-screen flex-col gap-5 py-0 md:py-10 items-center justify-start bg-slate-100 text-black"
   >
     <div
-      class="w-1/2 h-1/2 bg-white px-10 py-5 rounded-md shadow-lg flex flex-col gap-5"
+      class="md:h-1/5 hidden md:flex absolute bg-gradient-to-tl from-slate-900 to-slate-500 shadow-sm w-full top-0"
+    ></div>
+    <AddTodoForm :inputValue="inputValue" @addTodoList="addTodoList" />
+
+    <div
+      class="flex flex-col gap-3 w-full min-h-screen md:w-2/3 lg:w-1/2 rounded-md shadow-lg p-5 bg-white"
     >
-      <h1 class="text-black text-3xl font-bold">Todo Lists</h1>
-      <div class="w-full flex bg-slate-200 shadow-sm rounded-xl">
-        <input
-          type="text"
-          placeholder="Enter your todo list here"
-          v-model="inputValue"
-          class="bg-slate-200 font-medium text-lg rounded-l-xl p-5 w-full"
-        />
-        <button
-          class="bg-green-600 font-bold uppercase px-16 py-2 text-lg rounded-xl shadow-md text-white"
-          @click="addTodoList(inputValue)"
-        >
-          Add
-        </button>
-      </div>
-      <div
-        class="flex flex-col gap-3 h-full rounded-md shadow-sm p-5 bg-slate-100"
-      >
-        <Card v-for="todo of todos" :todo="todo" />
+      <h1 class="text-black text-xl font-bold text-left">Todo Lists</h1>
+      <h1>{{ inputValue }}</h1>
+      <Card
+        v-for="todo of reversedTodoList"
+        :todo="todo"
+        @deleteTodoList="deleteTodoList"
+        @updateTodoItem="updateTodoItem"
+      />
+      <div v-if="todos?.length == 0">
+        <p class="text-center text-lg">No todo list yet.</p>
       </div>
     </div>
   </div>
