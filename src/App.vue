@@ -54,7 +54,7 @@ const reversedTodoList = computed(() => [...todos.value].reverse());
       class="flex flex-col gap-3 w-full min-h-screen md:w-2/3 lg:w-1/2 rounded-md shadow-lg p-5 bg-white"
     >
       <h1 class="text-black text-xl font-bold text-left">Todo Lists</h1>
-      <h1>{{ inputValue }}</h1>
+      <!-- <h1>{{ inputValue }}</h1> -->
       <Card
         v-for="todo of reversedTodoList"
         :todo="todo"
