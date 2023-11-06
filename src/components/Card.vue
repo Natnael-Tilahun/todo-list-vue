@@ -1,20 +1,28 @@
 <script setup lang="ts">
 // defineProps<{ msg: string }>();
+
 defineProps<{
   todo: {
     value: string;
     completed: boolean;
     id: string;
   };
+  inputValue: string;
+  todoId: string;
 }>();
 
-const emit = defineEmits(["deleteTodoList", "updateTodoItem"]);
-const handleDeleteTodoItem = (id: string) => {
+const emit = defineEmits([
+  "deleteTodoList",
+  "update:inputValue",
+  "update:todoId",
+]);
+const handleDeleteTodoItem = (id: string | undefined) => {
   emit("deleteTodoList", id);
 };
-// const handleUpdateTodoItem = (value: string) => {
-//   emit("updateTodoItem", value);
-// };
+const handleUpdateTodoItem = (value: string, id: string) => {
+  emit("update:inputValue", value);
+  emit("update:todoId", id);
+};
 </script>
 
 <template>
@@ -37,16 +45,16 @@ const handleDeleteTodoItem = (id: string) => {
     >
       {{ todo.value }}
     </h1>
-    <!-- <svg
+    <svg
       xmlns="http://www.w3.org/2000/svg"
       class="w-5 h-5 fill-amber-600 mr-1"
       viewBox="0 0 24 24"
-      @click="handleUpdateTodoItem(todo.value)"
+      @click="handleUpdateTodoItem(todo.value, todo.id)"
     >
       <path
         d="M5 18.89H6.41421L15.7279 9.57629L14.3137 8.16207L5 17.4758V18.89ZM21 20.89H3V16.6474L16.435 3.21233C16.8256 2.8218 17.4587 2.8218 17.8492 3.21233L20.6777 6.04075C21.0682 6.43128 21.0682 7.06444 20.6777 7.45497L9.24264 18.89H21V20.89ZM15.7279 6.74786L17.1421 8.16207L18.5563 6.74786L17.1421 5.33365L15.7279 6.74786Z"
       ></path>
-    </svg> -->
+    </svg>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="w-5 h-5 fill-red-500"
