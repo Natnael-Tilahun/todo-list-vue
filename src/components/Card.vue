@@ -8,7 +8,7 @@ defineProps<{
     id: string;
   };
   inputValue: string;
-  todoId: string;
+  todoId: string | null;
 }>();
 
 const emit = defineEmits([
